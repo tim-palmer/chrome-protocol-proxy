@@ -79,7 +79,7 @@ func main() {
 
 			go dumpStream(protocolLogger, stream)
 
-			endpoint := "ws://" + *flagRemote + "/devtools/" + basePath + "/" + path.Base(req.URL.Path)
+			endpoint := "ws://" + *flagRemote + basePath + path.Base(req.URL.Path)
 
 			logger.Infof("---------- connection from %s to %s ----------", req.RemoteAddr, req.RequestURI)
 			logger.Infof("checking protocol versions on: %s", endpoint)
@@ -139,8 +139,9 @@ func main() {
 		}
 	}
 
-	mux.HandleFunc("/devtools/page/", handlerFunc("page"))
-	mux.HandleFunc("/devtools/browser/", handlerFunc("browser"))
+	mux.HandleFunc("/devtools/page/", handlerFunc("/devtools/page/"))
+	mux.HandleFunc("/devtools/browser/", handlerFunc("/devtools/browser/"))
+	mux.HandleFunc("/ws/", handlerFunc("/ws/"))
 
 	log.Printf("Listening for DevTools connections on: %s", *flagListen)
 
